@@ -34,6 +34,7 @@ select  count(*) as FISH_COUNT
 # DEVELOPERS 테이블에서 Python이나 C# 스킬을 가진 개발자의 정보를 조회하려 합니다. 조건에 맞는 개발자의 ID, 이메일, 이름, 성을 조회하는 SQL 문을 작성해 주세요.
 # 결과는 ID를 기준으로 오름차순 정렬해 주세요.
 
+# 아래코드는 테스트결과는 성공이지만, 채점실패 (why ??)
 select  dev.ID
      ,  dev.EMAIL
      ,  dev.FIRST_NAME
@@ -45,3 +46,18 @@ select  dev.ID
             (ski.CODE & dev.SKILL_CODE) = 1024
         )
  order by dev.ID;
+
+# 최종 채점성공...
+-- SELECT ID, EMAIL, FIRST_NAME, LAST_NAME
+-- FROM DEVELOPERS
+-- WHERE (SKILL_CODE & 256) > 0 OR (SKILL_CODE & 1024) > 0
+-- ORDER BY ID;
+
+SELECT distinct D.ID
+     , D.EMAIL
+     , D.FIRST_NAME
+     , D.LAST_NAME
+  FROM DEVELOPERS D
+  JOIN SKILLCODES S ON (D.SKILL_CODE & S.CODE) > 0
+ WHERE S.NAME IN ('Python', 'C#') -- 왜 S.NAME in (256, 1024)는 실패뜨지 ?
+ ORDER BY D.ID;
