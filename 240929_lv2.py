@@ -19,3 +19,16 @@ def solution(n):
         return n
     else:
         return (solution(n-1) + solution(n-2)) % 1234567
+
+
+# n이 커질수록 메모리 사용량이 늘어나는 이슈 개선위해 for 전환
+def solution(n):
+    
+    if n <= 1:
+        return n
+    
+    a, b = 0, 1
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    
+    return b % 1234567
