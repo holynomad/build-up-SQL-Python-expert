@@ -13,3 +13,18 @@ select ii.INGREDIENT_TYPE
 # CAR_RENTAL_COMPANY_CAR 테이블에서 '통풍시트', '열선시트', '가죽시트' 중 하나 이상의 옵션이 포함된 자동차가 자동차 종류 별로 몇 대인지 출력하는 SQL문을 작성해주세요. 
 # 이때 자동차 수에 대한 컬럼명은 CARS로 지정하고, 결과는 자동차 종류를 기준으로 오름차순 정렬해주세요.
 
+  select opt.CAR_TYPE
+       , count(opt.CAR_ID) as CARS
+    from
+        (
+            select crcc.CAR_ID
+                 , crcc.CAR_TYPE
+              from CAR_RENTAL_COMPANY_CAR crcc
+             where locate('통풍', crcc.OPTIONS) > 0
+                or locate('열선', crcc.OPTIONS) > 0
+                or locate('가죽', crcc.OPTIONS) > 0
+        ) opt     
+   group by opt.CAR_TYPE
+   order by opt.CAR_TYPE
+   ;
+
