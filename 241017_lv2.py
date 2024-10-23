@@ -28,3 +28,29 @@
 # 끝말잇기에 사용되는 단어의 뜻(의미)은 신경 쓰지 않으셔도 됩니다.
 # 정답은 [ 번호, 차례 ] 형태로 return 해주세요.
 # 만약 주어진 단어들로 탈락자가 생기지 않는다면, [0, 0]을 return 해주세요.
+
+def solution(n, words):
+    used_words = set()  # 이미 사용한 단어를 저장하는 집합
+    last_char = None    # 이전 단어의 마지막 글자
+
+    for i in range(len(words)):
+        current_word = words[i]
+        current_person = (i % n) + 1  # 몇 번째 사람이 말하는지
+        current_turn = (i // n) + 1   # 그 사람이 몇 번째 차례인지
+
+        # 이전에 사용한 단어인지 확인
+        if current_word in used_words:
+            return [current_person, current_turn]
+        
+        # 첫 번째 단어가 아니고, 규칙 위반 (이전 단어의 끝 글자와 현재 단어의 첫 글자가 일치하지 않음)
+        if last_char is not None and current_word[0] != last_char:
+            return [current_person, current_turn]
+
+        # 사용한 단어 집합에 현재 단어 추가
+        used_words.add(current_word)
+
+        # 다음 단어와의 비교를 위해 마지막 글자 저장
+        last_char = current_word[-1]
+
+    # 규칙을 모두 지킨 경우 [0, 0] 반환
+    return [0, 0]
