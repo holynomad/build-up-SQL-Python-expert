@@ -23,3 +23,26 @@ select ao.ANIMAL_ID
  where ao.DATETIME < ai.DATETIME
  order by ai.DATETIME asc
  ;
+
+# 11/15 (금)
+# USED_GOODS_BOARD와 USED_GOODS_USER 테이블에서 완료된 중고 거래의 총금액이 70만 원 이상인 사람의 회원 ID, 닉네임, 총거래금액을 조회하는 SQL문을 작성해주세요. 
+# 결과는 총거래금액을 기준으로 오름차순 정렬해주세요.
+
+select grp.USER_ID
+     , grp.NICKNAME
+     , grp.TOTAL_SALES
+from (
+        select ugu.USER_ID
+             , ugu.NICKNAME
+             , sum(ugb.PRICE) as TOTAL_SALES
+          from USED_GOODS_USER ugu
+          join USED_GOODS_BOARD ugb 
+            on ugu.USER_ID = ugb.WRITER_ID
+           and ugb.STATUS = 'DONE'
+         group by ugu.USER_ID
+                , ugu.NICKNAME
+     ) grp
+where grp.TOTAL_SALES >= 700000
+order by grp.TOTAL_SALES
+ ;
+
