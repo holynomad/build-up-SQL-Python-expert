@@ -46,3 +46,40 @@ where grp.TOTAL_SALES >= 700000
 order by grp.TOTAL_SALES
  ;
 
+
+# 11/23 (토)
+# REST_INFO 테이블에서 음식종류별로 즐겨찾기수가 가장 많은 식당의 음식 종류, ID, 식당 이름, 즐겨찾기수를 조회하는 SQL문을 작성해주세요. 
+# 이때 결과는 음식 종류를 기준으로 내림차순 정렬해주세요.
+
+-- 방법 1: Window Function을 사용한 방법
+with RankedRestaurants as (
+    select 
+        FOOD_TYPE,
+        REST_ID,
+        REST_NAME,
+        FAVORITES,
+        RANK() OVER (PARTITION by FOOD_TYPE order by FAVORITES desc) as rnk
+    from REST_INFO
+)
+select 
+    FOOD_TYPE,
+    REST_ID,
+    REST_NAME,
+    FAVORITES
+from RankedRestaurants
+where rnk = 1
+order by FOOD_TYPE desc;
+
+-- 방법 2: Correlated Subquery를 사용한 방법
+select 
+    r1.FOOD_TYPE,
+    r1.REST_ID,
+    r1.REST_NAME,
+    r1.FAVORITES
+from REST_INFO r1
+where r1.FAVORITES = (
+    select MAX(r2.FAVORITES)
+      from REST_INFO r2
+     where r2.FOOD_TYPE = r1.FOOD_TYPE
+)
+order by r1.FOOD_TYPE desc;
